@@ -1,46 +1,37 @@
-const postPlant = ((req, res) => {
+import { Schema } from "mongoose"
+import plant from "../models/Plant"
+
+const plants = []
+
+const postPlant = async (req, res) => {
     const { name, category, image, price, discription } = req.body
 
+    const newPlant = new plant ({
+        name : name,
+        category : category,
+        image : image,
+        price : price,
+        discription : discription
+    })
 
-
-    if (!name || !category || !image || !price || !discription) {
-
-        return res.json({
-            success: false,
-            message: "Please fill all the fields",
-            data: null
-        })
-    }
-
-    const randomId = Math.round(Math.random() * 1000)
-
-    const newPlant = {
-        id: randomId,
-        name: name,
-        category: category,
-        image: image,
-        price: price,
-        discription: discription
-    }
-
-    plants.push(newPlant)
-
+    const savedPlant = await newPlant.save();
+    
     res.json({
         message: "plant added successfully",
         success: true,
-        data: newPlant
+        data: savedPlant
     })
-})
+}
 
-const getPlants = ((req, res) => {
+const getPlants = (req, res) => {
     res.json({
         message: "plants fetched successfully",
         success: true,
         data: plants
     })
-})
+}
 
-const getPlantId = ((req, res) => {
+const getPlantId = (req, res) => {
     const { id } = req.params
 
     const plant = plants.find((p) => p.id === id)
@@ -50,9 +41,9 @@ const getPlantId = ((req, res) => {
         success: true,
         data: plant
     })
-})
+}
 
-const putPlantId = ( (req, res) => {
+const putPlantId = (req, res) => {
     const {
         id: randomId,
         name: name,
@@ -93,9 +84,9 @@ const putPlantId = ( (req, res) => {
         success: true,
         data: newObj
     })
-})
+}
 
-const deletePlantId = ((req, res) => {
+const deletePlantId = (req, res) => {
     const { id } = req.params;
     let index = -1
     plants.forEach((plant, i) => {
@@ -118,7 +109,7 @@ const deletePlantId = ((req, res) => {
 
         })
     
-    })
+    }
 
 export {
     postPlant,
