@@ -8,5 +8,6 @@ const plantSchema = new Schema({
     price: Number,
    
 })
-const plant = model("plant" , plantSchema)
-export default plant
+const Plant = model("plant" , plantSchema)
+
+export default Plant

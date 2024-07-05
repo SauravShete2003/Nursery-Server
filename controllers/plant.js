@@ -1,120 +1,86 @@
-import { Schema } from "mongoose"
-import plant from "../models/Plant"
+import { Schema } from "mongoose";
+import Plant from "../models/Plant.js";
 
-const plants = []
 
 const postPlant = async (req, res) => {
-    const { name, category, image, price, discription } = req.body
+  const { name, category, image, price, discription } = req.body;
 
-    const newPlant = new plant ({
-        name : name,
-        category : category,
-        image : image,
-        price : price,
-        discription : discription
-    })
+  const newPlant = new Plant({
+    name: name,
+    category: category,
+    image: image,
+    price: price,
+    discription: discription,
+  });
 
-    const savedPlant = await newPlant.save();
-    
-    res.json({
-        message: "plant added successfully",
-        success: true,
-        data: savedPlant
-    })
-}
+  const savedPlant = await newPlant.save();
 
-const getPlants = (req, res) => {
-    res.json({
-        message: "plants fetched successfully",
-        success: true,
-        data: plants
-    })
-}
+  res.json({
+    message: "plant added successfully",
+    success: true,
+    data: savedPlant,
+  });
+};
 
-const getPlantId = (req, res) => {
-    const { id } = req.params
+const getPlants = async (req, res) => {
+    const allPlant = await Plant.find()
+  res.json({
+    message: "plants fetched successfully",
+    success: true,
+    data: allPlant,
+  });
+};
 
-    const plant = plants.find((p) => p.id === id)
+const getPlantId = async (req, res) => {
+  const { id } = req.params;
 
-    res.json({
-        message: "plant fetched successfully",
-        success: true,
-        data: plant
-    })
-}
+  const plant = await Plant.findById(id)
 
-const putPlantId = (req, res) => {
-    const {
-        id: randomId,
-        name: name,
+  res.json({
+    message: "plant fetched successfully",
+    success: true,
+    data: plant,
+  });
+};
+
+const putPlantId = async(req, res) => {
+  const {
+     name,
+     category,
+     image,
+     price,
+     discription,
+  } = req.body;
+
+  const { id } = req.params;
+  const updateResult = await Plant.updateOne({_id : id},{
+    $set: {
+        name: name ,
         category: category,
         image: image,
         price: price,
-        discription: discription
-    } = req.body
+        discription: discription,
+    }})
+     const updatedPlant = await Plant.findById(id)
 
-    const { id } = req.params
-
-    let index = -1
-
-    plants.forEach((plant, i) => {
-        if (plant.id == id) {
-            index = i
-        }
-    })
-    const newObj = {
-        id,
-        name,
-        category,
-        image,
-        price,
-        discription
-    }
-    if (index == -1) {
-        res.json({
-            message: `plant not found ${id}`,
-            success: false,
-        })
-    }
-    else {
-        plants[index] = newObj
-    }
     res.json({
         message: "plant updated successfully",
         success: true,
-        data: newObj
+        data : updatedPlant
     })
 }
 
-const deletePlantId = (req, res) => {
-    const { id } = req.params;
-    let index = -1
-    plants.forEach((plant, i) => {
-    if (plant.id == (id)) {
-            index = i
-        }})
+const deletePlantId = async (req, res) => {
+  const { id } = req.params;
+ await Plant.deleteOne({
+    _id : id 
+ })
 
-    if (index == -1) {
-       return res.json({
-            message: `plant not found with ${id}`,
-            success: false
-        })} 
+  res.json({
+    message: "plant deleted successfully",
+    success: true,
+    data: null,
+  });
+};
 
-        plants.splice(index, 1)
-
-        res.json({
-            message: "plant deleted successfully",
-            success: true,
-            data: null
-
-        })
-    
-    }
-
-export {
-    postPlant,
-    getPlants,
-    getPlantId,
-    putPlantId,
-    deletePlantId
-}
+export { postPlant, getPlants, getPlantId, putPlantId, deletePlantId };
