@@ -2,8 +2,10 @@ import express, { json } from "express";
 import dotenv, { config } from "dotenv";
 import mongoose from "mongoose";
 dotenv.config();
+import cors from "cors"
 
 const app = express();
+app.use(cors());
 app.use(express.json());
 
 import { getHealth } from "./controllers/health.js";

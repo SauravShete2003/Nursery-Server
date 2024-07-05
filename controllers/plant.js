@@ -49,17 +49,17 @@ const putPlantId = async(req, res) => {
      category,
      image,
      price,
-     discription,
+     description,
   } = req.body;
 
   const { id } = req.params;
-  const updateResult = await Plant.updateOne({_id : id},{
+  const updateResult = await Plant.updateMany({_id : id},{
     $set: {
         name: name ,
         category: category,
         image: image,
         price: price,
-        discription: discription,
+        description: description,
     }})
      const updatedPlant = await Plant.findById(id)
 
