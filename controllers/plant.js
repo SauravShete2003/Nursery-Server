@@ -1,16 +1,28 @@
 import { Schema } from "mongoose";
 import Plant from "../models/Plant.js";
 
+const updateDescriptions = async () => {
+  await mongoose.connect("mongodb://localhost:27017/yourdatabase");
+
+  await Plant.updateMany({}, [
+    { $set: { description: "$discription" } },
+    { $unset: "discription" },
+  ]);
+
+  console.log("Updated all documents to use 'description' instead of 'discription'");
+  mongoose.disconnect();
+};
+
 
 const postPlant = async (req, res) => {
-  const { name, category, image, price, discription } = req.body;
+  const { name, category, image, price, description } = req.body; // Changed 'discription' to 'description'
 
   const newPlant = new Plant({
     name: name,
     category: category,
     image: image,
     price: price,
-    discription: discription,
+    description: description, 
   });
 
   const savedPlant = await newPlant.save();
@@ -53,7 +65,7 @@ const putPlantId = async(req, res) => {
   } = req.body;
 
   const { id } = req.params;
-  const updateResult = await Plant.updateMany({_id : id},{
+  const updateResult = await Plant.updateOne({_id : id},{
     $set: {
         name: name ,
         category: category,
