@@ -29,7 +29,7 @@ const postPlant = async (req, res) => {
 };
 
 const getPlants = async (req, res) => {
-    const allPlant = await Plant.find().sort({createdAt: -1})
+    const allPlant = await Plant.find().sort({updatedAt: -1})
   res.json({
     message: "plants fetched successfully",
     success: true,
